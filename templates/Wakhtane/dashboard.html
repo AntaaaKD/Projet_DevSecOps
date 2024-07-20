@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Tableau de bord{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="{% url 'Wakhtane:chat_section' %}">Chat</a>
+        <a href="{% url 'Wakhtane:group_section' %}">Discussion Groupe</a>
+        <a href="{% url 'Wakhtane:video_section' %}">Appel Vidéo</a>
+        <a href="{% url 'accounts:login' %}">Déconnexion</a>
+    </div>
+    <h2>Bienvenue dans le tableau de bord de Wakhtane</h2>
+    <div class="content">
+        {% block content %}
+        <!-- Le contenu de la section spécifique sera chargé ici -->
+        {% endblock %}
+    </div>
+</body>
+</html>

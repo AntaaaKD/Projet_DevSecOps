@@ -1,0 +1,244 @@
+/* Styles généraux */
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    background: url("../images/background.jpg") no-repeat center center fixed;
+    background-size: cover;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    background: url("../images/background.jpg") no-repeat center center fixed;
+    background-size: cover;
+    margin: 50px auto; /* Augmenter la marge */
+    background: #ffffff;
+    padding: 30px; /* Augmenter le padding */
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    margin-bottom: 15px;
+}
+
+/* Styles pour la liste des messages */
+.messages {
+    list-style-type: none;
+    padding: 0;
+}
+
+.messages li {
+    padding: 15px;
+    border-bottom: 1px solid #ffffff;
+}
+
+.messages li:last-child {
+    border-bottom: none;
+}
+
+/* Styles pour les boutons */
+.button {
+    display: inline-block;
+    padding: 15px 25px;
+    margin: 15px 0;
+    font-size: 13px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #de9365;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button:hover {
+    background-color: #de9365;
+    transform: scale(1.05);
+}
+
+/* Styles pour les appels vidéo */
+.video-call {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: box-shadow 0.3s ease;
+}
+
+.video-call h2 {
+    margin-top: 0;
+}
+
+.video-call:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.video-call p {
+    margin: 10px 0;
+}
+
+/* Styles pour la liste des discussions */
+.chat-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.chat-list li {
+    margin-bottom: 15px;
+    background-color: rgba(255, 255, 255, 0.3); /* Fond semi-transparent */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.chat-list li a {
+    display: block;
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+}
+
+.chat-list li:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Animation permanente pour les éléments de la liste */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.03);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.chat-list li a {
+    animation: pulse 3s infinite; /* Animation permanente */
+}
+
+/* Styles généraux */
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.chat-header {
+    text-align: center;
+    padding: 15px 0;
+}
+
+.chat-body {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.messages {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.message {
+    display: flex;
+    flex-direction: column; /* Ajout d'une colonne pour séparer le contenu du message de son statut */
+    margin-bottom: 15px;
+    max-width: 80%;
+}
+
+.message-content {
+    background-color: #f6cbbc;
+    padding: 10px;
+    border-radius: 10px;
+    word-wrap: break-word;
+}
+
+.sent .message-content {
+    align-self: flex-end; /* Alignement à droite pour les messages envoyés */
+}
+
+.received .message-content {
+    align-self: flex-start; /* Alignement à gauche pour les messages reçus */
+}
+
+.message-status {
+    margin-top: 5px; /* Marge entre le contenu du message et l'icône de réception */
+    align-self: flex-end; /* Alignement à droite pour l'icône de réception */
+}
+
+
+/* Ajouter ces styles pour l'icône de réception */
+.message-status {
+    margin-top: 5px; /* Marge entre le contenu du message et l'icône de réception */
+    align-self: flex-end; /* Alignement à droite pour l'icône de réception */
+}
+
+.message-status i {
+    color: #007bff; /* Couleur de l'icône */
+    font-size: 16px; /* Taille de l'icône */
+    margin-right: 5px; /* Marge à droite de l'icône */
+}
+
+
+
+.chat-footer {
+    text-align: center;
+    padding: 15px 0;
+}
+
+.button-back {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px 20px;
+            background-color: #de9365;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-back:hover {
+            background-color: #444;
+        }
+
+.messages {
+    list-style: none;
+    padding: 0;
+}
+
+.messages li {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.messages .success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.messages .error {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}

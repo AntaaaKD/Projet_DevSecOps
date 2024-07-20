@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chats</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles_chat.css' %}">
+    <style>
+        /* Style pour la transparence du container */
+        .container {
+            background-color: rgba(255, 255, 255, 0.4); /* Couleur de fond semi-transparente */
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'Wakhtane:dashboard' %}" class="button button-back">Retour</a>
+    <div class="container">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <h1>Chats</h1>
+        <ul class="chat-list">
+            {% for chat in chats %}
+                <li>
+                    <a href="{% url 'Wakhtane:chat_detail' chat.id %}">{{ chat.title }}</a>
+                     {% for participant in chat.participants.all %}
+                        {% if participant != request.user %}
+                            <p>Destinataire: {{ participant.email }}</p>
+                        {% endif %}
+                    {% endfor %}
+                    <form action="{% url 'Wakhtane:chat_delete' chat.id %}" method="post" class="delete-form" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="button" class="button button-delete" onclick="confirmDelete(this)">Supprimer</button>
+                    </form>
+                </li>
+            {% empty %}
+                <li>Aucune discussion disponible.</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'Wakhtane:chat_create' %}" class="button">Créer un nouveau chat</a>
+    </div>
+    <script src="{% static 'js/scripts_chat.js' %}"></script>
+    <script>
+        function confirmDelete(button) {
+            if (confirm("Êtes-vous sûr de vouloir supprimer cette discussion ?")) {
+                button.closest('form').submit();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wakhtane - Votre application de chat moderne</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+</head>
+<body>
+    <header>
+    </header>
+    <section class="hero">
+        <h1>Bienvenue sur Wakhtane</h1>
+        <p>L' application de chat moderne pour rester connecté avec vos proches</p>
+        <a href="{% url 'accounts:signup' %}">S'inscrire</a>
+        <a href="{% url 'accounts:login' %}" >Se connecter</a>
+    </section>
+    <section class="features">
+        <div class="feature">
+            <img src="{% static 'images/security-icon.webp' %}" alt="Sécurité">
+            <h2>Sécurité</h2>
+            <p>Vos données sont protégées avec un chiffrement de bout en bout.</p>
+        </div>
+        <div class="feature">
+            <img src="{% static 'images/speed.png' %}" alt="Rapidité">
+            <h2>Rapidité</h2>
+            <p>Des messages instantanés pour une communication fluide.</p>
+        </div>
+        <div class="feature">
+            <img src="{% static 'images/customize.jpeg' %}" alt="Personnalisation">
+            <h2>Personnalisation</h2>
+            <p>Personnalisez votre expérience avec divers thèmes et paramètres.</p>
+        </div>
+    </section>
+    <footer>
+        <p>&copy; 2024 Wakhtane. Tous droits réservés.</p>
+    </footer>
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>

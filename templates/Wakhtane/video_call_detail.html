@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de l'appel vidéo</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles_chat.css' %}">
+    <style>
+        .container {
+            background-color: rgba(255, 255, 255, 0.7); /* Fond semi-transparent */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'Wakhtane:video_call_list' %}" class="button button-back">Retour</a>
+    <div class="container">
+        <h1>Détails de l'appel vidéo</h1>
+        <p><strong>Titre :</strong> {{ video_call.title }}</p>
+        <p><strong>Organisé par :</strong> {{ video_call.created_by }}</p>
+        <p><strong>Date :</strong> {{ video_call.scheduled_at }}</p>
+        <p><strong>Heure :</strong> {{ video_call.scheduled_at|time:"H:i" }}</p>
+        <p><strong>Durée :</strong> {{ video_call.duration }}</p>
+        <!-- Ajoutez d'autres détails si nécessaire -->
+    </div>
+
+    <!-- Conteneur pour la notification -->
+
+
+    <script>
+        // Récupérez les détails de l'appel vidéo pour la notification
+        const videoCallDetails = {
+            title: "{{ video_call.title }}",
+            organizer: "{{ video_call.created_by }}",
+            date: "{{ video_call.scheduled_at }}",
+            time: "{{ video_call.scheduled_at|time:'H:i' }}",
+            duration: "{{ video_call.duration }}"
+        };
+
+        // Affichez une notification avec les détails
+        document.addEventListener('DOMContentLoaded', function() {
+            const notificationContainer = document.getElementById('notification');
+            const notificationMessage = document.getElementById('notification-message');
+
+            // Construction du message de notification
+            const message = `Nouvel appel vidéo : ${videoCallDetails.title} organisé par ${videoCallDetails.organizer}. Date : ${videoCallDetails.date}, Heure : ${videoCallDetails.time}. Durée : ${videoCallDetails.duration}`;
+
+            // Affichage de la notification
+            notificationMessage.textContent = message;
+            notificationContainer.style.display = 'block';
+        });
+    </script>
+</body>
+</html>

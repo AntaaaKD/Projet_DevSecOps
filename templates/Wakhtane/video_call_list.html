@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appels Vidéo</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles_chat.css' %}">
+    <style>
+        .container {
+            background-color: rgba(255, 255, 255, 0.3); /* Fond semi-transparent */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'Wakhtane:dashboard' %}" class="button button-back">Retour</a>
+    <div class="container">
+        <h1>Appels Vidéo</h1>
+        <ul class="video-calls">
+            {% if video_calls %}
+                {% for call in video_calls %}
+                    <li>
+                        <div class="video-call">
+                            <h2>{{ call.title }}</h2>
+                            <p>Organisé par : {{ call.created_by.username }}</p>
+                            <p>Date : {{ call.scheduled_at.date }}</p>
+                            <p>Heure : {{ call.scheduled_at.time }}</p>
+                            <a href="{% url 'Wakhtane:video_call_detail' call.id %}" class="button">Détails</a>
+                            <a href="{% url 'Wakhtane:video_call_delete' call.id %}" class="button button-delete">Supprimer</a>
+                            <button onclick="startCall('{{ call.id }}')">Rejoindre l'appel</button>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <p>Aucun appel vidéo disponible.</p>
+            {% endif %}
+        </ul>
+        <a href="{% url 'Wakhtane:video_call_create' %}" class="button">Planifier un nouvel appel vidéo</a>
+    </div>
+    <div id="video-container" style="display:none;">
+        <video id="localVideo" autoplay playsinline></video>
+        <video id="remoteVideo" autoplay playsinline></video>
+        <button onclick="endCall()">Terminer l'appel</button>
+    </div>
+    <script>
+        let localStream;
+        let remoteStream;
+        let peerConnection;
+        const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]};
+        const roomName = 'default';
+
+        async function startCall(roomName) {
+            document.getElementById('video-container').style.display = 'block';
+
+            const ws = new WebSocket(`ws://${window.location.host}/ws/video-call/${roomName}/`);
+
+            ws.onmessage = async function(event) {
+                const data = JSON.parse(event.data);
+                if (data.type === 'offer') {
+                    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+                    const answer = await peerConnection.createAnswer();
+                    await peerConnection.setLocalDescription(answer);
+                    ws.send(JSON.stringify({'type': 'answer', 'answer': answer}));
+                } else if (data.type === 'answer') {
+                    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.answer));
+                } else if (data.type === 'candidate') {
+                    await peerConnection.addIceCandidate(new RTCIceCandidate(data.candidate));
+                }
+            };
+
+            ws.onopen = async function(event) {
+                localStream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
+                document.getElementById('localVideo').srcObject = localStream;
+
+                peerConnection = new RTCPeerConnection(configuration);
+
+                localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+
+                peerConnection.ontrack = (event) => {
+                    const [remoteStream] = event.streams;
+                    document.getElementById('remoteVideo').srcObject = remoteStream;
+                };
+
+                peerConnection.onicecandidate = (event) => {
+                    if (event.candidate) {
+                        ws.send(JSON.stringify({'type': 'candidate', 'candidate': event.candidate}));
+                    }
+                };
+
+                const offer = await peerConnection.createOffer();
+                await peerConnection.setLocalDescription(offer);
+                ws.send(JSON.stringify({'type': 'offer', 'offer': offer}));
+            };
+        }
+
+        function endCall() {
+            peerConnection.close();
+            localStream.getTracks().forEach(track => track.stop());
+            document.getElementById('video-container').style.display = 'none';
+        }
+    </script>
+    <script src="{% static 'js/scripts_chat.js' %}"></script>
+</body>
+</html>

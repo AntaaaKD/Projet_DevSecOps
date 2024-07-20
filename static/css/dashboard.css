@@ -1,0 +1,62 @@
+body {
+    font-family: Arial, sans-serif;
+    background: url("../images/b2.jpg") no-repeat center center fixed;
+    animation: myAnim 10s ease 0s infinite forwards;
+    background-size: cover;
+    text-align: center; /* Center text within the body */
+}
+
+h2 {
+    margin-top: 20px;
+}
+
+.navbar {
+    margin-top: 20px; /* Space below the heading */
+}
+
+.navbar a {
+    display: inline-block;
+    padding: 10px 20px;
+    color: white; /* Text color */
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    border-radius: 5px; /* Rounded corners */
+    margin: 0 5px; /* Space between links */
+}
+
+.navbar a:hover {
+    background-color: rgba(0, 0, 0, 0.7); /* Darker background on hover */
+}
+
+.content {
+    padding: 20px;
+}
+
+.section {
+    display: none;
+}
+
+.section.active {
+    display: block;
+}
+
+.section h3 {
+    margin-top: 0;
+}
+
+.create-btn {
+    margin-bottom: 10px;
+}
+
+@keyframes myAnim {
+    0% {
+        background-position: left bottom;
+        background-size: 100%;
+    }
+
+    100% {
+        background-position: left bottom;
+        background-size: 150%;
+    }
+}

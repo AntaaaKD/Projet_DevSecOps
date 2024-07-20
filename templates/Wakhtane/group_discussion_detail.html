@@ -1,0 +1,210 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de la Discussion de Groupe</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles_chat.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Styles généraux pour les messages et les fichiers */
+        .group-messages {
+            list-style-type: none;
+            padding: 0;
+        }
+        .message {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 60%;
+            background-color: transparent;
+        }
+        .message.sent {
+            margin-left: auto;
+            background-color: rgba(246, 203, 188, 0.4);
+            color: #262222;
+            border: 1px solid rgba(246, 203, 188, 0.8);
+        }
+        .message.received {
+            margin-right: auto;
+            background-color: rgba(224, 224, 224, 0.4);
+            color: #333;
+            border: 1px solid rgba(224, 224, 224, 0.8);
+        }
+        .message strong {
+            display: inline;
+            margin-right: 5px;
+        }
+        .status-icon {
+            width: 25px;
+            height: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f6cbbc;
+            border-radius: 5px;
+            margin-left: 5px;
+        }
+        .status-icon i {
+            color: #fff;
+        }
+        .group-messages form {
+            display: inline;
+        }
+        .group-messages button {
+            border: none;
+            background: none;
+            color: red;
+            cursor: pointer;
+        }
+        .discussion-form {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .discussion-form input[type="text"],
+        .discussion-form input[type="file"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: transparent;
+            margin-right: 10px;
+        }
+        .discussion-form button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #f6cbbc;
+            color: #fff;
+            cursor: pointer;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .file-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 10px;
+        }
+        .file-preview video {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+        }
+        .file-attachment {
+            margin-top: 10px;
+        }
+        .file-download-link {
+            color: #f88b4c;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'Wakhtane:group_section' %}" class="button button-back">Retour</a>
+    <div class="container">
+        <h1>{{ discussion.name }}</h1>
+        <ul class="group-messages">
+            {% for message in discussion.messages.all %}
+            <li class="message {% if message.sender.email == request.user.email %}sent{% else %}received{% endif %}" data-message-id="{{ message.id }}">
+                {% if message.sender.email != request.user.email %}
+                    <strong>{{ message.sender.email }}</strong>:
+                {% else %}
+                    <strong>Vous</strong>:
+                {% endif %}
+                {{ message.content }}
+
+                {% if message.file %}
+                    {% if message.file.name|lower|slice:"-3:" in "jpg jpeg png" %}
+                        <div class="file-preview">
+                            <img src="{{ message.file.url }}" alt="Aperçu de l'image">
+                            <div><a href="{{ message.file.url }}" class="file-download-link" download>Télécharger l'image</a></div>
+                        </div>
+                    {% elif message.file.name|lower|slice:"-3:" == 'pdf' %}
+                        <div class="file-attachment">
+                            <a href="{{ message.file.url }}" class="file-download-link" download>Télécharger le PDF</a>
+                        </div>
+                    {% elif message.file.name|lower|slice:"-3:" in "mp4 avi mov" %}
+                        <div class="file-preview">
+                            <video controls>
+                                <source src="{{ message.file.url }}" type="video/mp4">
+                                Votre navigateur ne prend pas en charge la lecture vidéo.
+                            </video>
+                            <div><a href="{{ message.file.url }}" class="file-download-link" download>Télécharger la vidéo</a></div>
+                        </div>
+                    {% else %}
+                        <div class="file-attachment">
+                            <a href="{{ message.file.url }}" class="file-download-link" download>Télécharger le fichier</a>
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                {% if message.status == 'sent' %}
+                    <div class="status-icon">
+                        <i class="fas fa-paper-plane"></i>
+                    </div>
+                {% elif message.status == 'received' %}
+                    <div class="status-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                {% elif message.status == 'read' %}
+                    <div class="status-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        <!-- Formulaire pour envoyer un nouveau message avec un document joint -->
+        <form method="post" action="{% url 'Wakhtane:create_group_message' pk=discussion.id %}" class="discussion-form" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="text" name="content" placeholder="Tapez votre message ici...">
+            <input type="file" name="file">
+            <button type="submit" class="button">Envoyer</button>
+        </form>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const messages = document.querySelectorAll('.message.sent');
+
+            messages.forEach(message => {
+                message.addEventListener('contextmenu', function (e) {
+                    e.preventDefault();
+                    const confirmed = confirm('Voulez-vous vraiment supprimer ce message ?');
+                    if (confirmed) {
+                        const messageId = this.getAttribute('data-message-id');
+                        const csrfToken = '{{ csrf_token }}';
+
+                        fetch("{% url 'Wakhtane:delete_group_message' pk=discussion.id %}", {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': csrfToken,
+                            },
+                            body: new URLSearchParams({
+                                'message_id': messageId
+                            })
+                        }).then(response => {
+                            if (response.status === 204) {
+                                this.remove();
+                            } else {
+                                alert('Erreur lors de la suppression du message.');
+                            }
+                        }).catch(error => {
+                            console.error('Erreur:', error);
+                            alert('Erreur lors de la suppression du message.');
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

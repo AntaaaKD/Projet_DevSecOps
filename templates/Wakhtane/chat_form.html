@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer un Nouveau Chat</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles_chat.css' %}">
+    <style>
+        /* Nouveaux styles pour aligner les formulaires et la liste de contacts */
+        .form-column {
+            float: left;
+            width: 45%;
+            margin-right: 5%;
+        }
+
+        .contacts-column {
+            margin: 50px auto 0;
+            text-align: center;
+        }
+
+        .contacts-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .contacts-list li {
+            margin-bottom: 10px;
+            font-size: 16px;
+            cursor: pointer; /* Ajout d'un curseur pointer pour indiquer l'interactivité */
+            transition: transform 0.2s ease-in-out; /* Transition pour une animation douce */
+        }
+
+        .contacts-list li:hover {
+            transform: scale(1.05); /* Animation de zoom au survol */
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'Wakhtane:chat_section' %}" class="button button-back">Retour</a>
+    <div class="container" style="background-color: rgba(255, 255, 255, 0.4); /* Couleur de fond semi-transparente */ max-width: 800px; margin: 50px auto; padding: 30px; border-radius: 15px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <div class="form-column">
+            <h2>Ajouter un nouveau contact</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ add_contact_form.as_p }}
+                <button type="submit" name="add_contact_form" class="button">Ajouter Contact</button>
+            </form>
+        </div>
+
+        <div class="form-column">
+            <h2>Créer un nouveau chat</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ create_chat_form.as_p }}
+                <button type="submit" name="create_chat_form" class="button">Créer Chat</button>
+            </form>
+        </div>
+
+        <div class="contacts-column">
+            <h2>Liste de vos contacts</h2>
+            <ul class="contacts-list">
+                {% for contact in contacts %}
+                    {% if contact.email != user.email %}
+                        <li>{{ contact.email }}</li>
+                    {% endif %}
+                {% empty %}
+                    <li>Aucun contact ajouté pour le moment.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <script src="{% static 'js/scripts_chat.js' %}"></script>
+</body>
+</html>

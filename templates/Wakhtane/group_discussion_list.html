@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discussions de Groupe</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles_chat.css' %}">
+    <style>
+        .container {
+            background-color: rgba(255, 255, 255, 0.4); /* Fond semi-transparent */
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .group-discussions {
+            list-style: none; /* Supprimer les puces */
+            padding: 0; /* Supprimer le padding par défaut */
+        }
+        .group-discussions li {
+            margin: 10px 0; /* Ajouter de l'espace entre les éléments */
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            position: relative; /* Ajout de position relative pour les discussions */
+        }
+        .discussion-name {
+            flex-grow: 1;
+            margin-right: 20px; /* Espace entre le nom et le bouton supprimer */
+            font-size: 1.5em; /* Augmenter la taille de la police */
+            animation: moving 3s infinite;
+            cursor: pointer;
+            color: #333; /* Ajout de couleur pour le texte du nom de la discussion */
+            text-decoration: none; /* Enlever le soulignement */
+        }
+
+        .delete-form {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            margin-bottom: 10px;
+            margin-right: 10px;
+            z-index: 3;
+        }
+        .group-discussions li button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            color: #333;
+        }
+        @keyframes moving {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+            100% { transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'Wakhtane:dashboard' %}" class="button button-back">Retour</a>
+    <div class="container">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <h1>Discussions de Groupe</h1>
+        <ul class="group-discussions">
+            {% for discussion in group_discussions %}
+                <li>
+                    <a href="{% url 'Wakhtane:group_discussion_detail' discussion.id %}" class="discussion-name">{{ discussion.name }}</a>
+                    <form action="{% url 'Wakhtane:group_discussion_delete' discussion.id %}" method="post" class="delete-form">
+                        {% csrf_token %}
+                        <button type="submit" class="button button-delete" onclick="confirmDelete(this)">Supprimer</button>
+                    </form>
+                </li>
+            {% empty %}
+                <li>Aucune discussion de groupe disponible.</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'Wakhtane:group_discussion_create' %}" class="button">Créer une nouvelle discussion de groupe</a>
+    </div>
+    <script src="{% static 'js/scripts_chat.js' %}"></script>
+    <script>
+        function confirmDelete(button) {
+            if (confirm("Êtes-vous sûr de vouloir supprimer cette discussion de groupe ?")) {
+                button.closest('form').submit();
+            }
+        }
+
+        // Fonction pour recharger la page après la suppression
+        function reloadPage() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planifier un Appel Vidéo</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles_chat.css' %}">
+</head>
+<body>
+    <a href="{% url 'Wakhtane:video_section' %}" class="button button-back">Retour</a>
+    <div class="container">
+        <h1>Planifier un appel vidéo</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="button">Planifier</button>
+        </form>
+    </div>
+    <script src="{% static 'js/scripts_chat.js' %}"></script>
+</body>
+</html>

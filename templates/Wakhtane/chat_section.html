@@ -1,0 +1,16 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section de Chat</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles_chat.css' %}">
+</head>
+<body>
+    <div id="chat-section" class="section container">
+        {% include 'Wakhtane/chat_list.html' %}
+    </div>
+    <script src="{% static 'js/scripts_chat.js' %}"></script>
+</body>
+</html>
